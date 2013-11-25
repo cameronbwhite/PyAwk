@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Copyright (C) 2013, Cameron White
 import re
 

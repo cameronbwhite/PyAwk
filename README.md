@@ -6,23 +6,26 @@ Framework for creating python scripts that work like AWK
 ## IDEA ##
 
 ```python
-from pyawk import PyAwk
+from pyawk import PyAwk, recordEq
+import sys
 
-awk = PyAwk(FS=",")
+awk = PyAwk()
 
 @awk.begin
-def begin(*args, **kargs):
-    awk.users = 0
-    
-@awk
-def main(*args, **kargs):
-    awk.pattern(args[1], r"user_name")
-    awk.print(args[2])
-    awk.users++
+def begin():
+    awk.allfiles = 0
+    awk.myfiles = 0
+
+@awk.main
+@recordEq(3, "cbw")
+def main(*args):
+    awk.myfiles += 1
+    awk.allfiles += 1
 
 @awk.end
-def end(*args, **kargs):
-    awk.print("Number of users: ", awk.users)
+def end():
+    print("all: " + str(awk.allfiles))
+    print("me: " + str(awk.myfiles))
     
-awk.read(stdin)
+awk.run(sys.stdin)
 ```

@@ -16,12 +16,6 @@ class PyAwk:
 
     def end(self, f):
         self.end = f
-    
-    def pattern(self, field, regEx):
-        if re.match(regEx, field):
-            return True
-        else:
-            return False
 
     def run(self, input):
         if self.begin:
@@ -52,3 +46,33 @@ class PyAwk:
 
         if self.end:
             self.end()
+
+class recordEq:
+
+    def __init__(self, field, regEx):
+        self._field = field
+        self._regEx = regEx
+
+    def __call__(self, function):
+        def new_function(*args):
+            try:
+                if re.match(self._regEx, args[self._field]):
+                    function(*args)
+            except IndexError:
+                pass
+        return new_function
+
+class recordNotEq:
+
+    def __init__(self, field, regEx):
+        self._field = field
+        self._regEx = regEx
+
+    def __call__(self, function):
+        def new_function(*args):
+            try:
+                if not re.match(self._regEx, args[self._field]):
+                    function(*args)
+            except IndexError:
+                pass
+        return new_function
